@@ -4,8 +4,6 @@ import webview
 import time
 import _thread
 
-
-
 permitted_chars = ["w", "a", "s", "d"]
 
 layout = """
@@ -26,7 +24,7 @@ layout = """
   }
   
   .noop {
-    background-color: transparent; border: none;
+    background-color: transparent!important; border: none;
   }
   
   #left, #right {
@@ -71,8 +69,9 @@ layout = """
     </table>
   </body>
   <script>
-    window.set_label = function(key) {
+    window.set_label = function(key, no_bg) {
       document.getElementById(key).style.opacity = 1;
+      if(no_bg) return;
       document.getElementById(key).style.backgroundColor = "#fff"
       document.getElementById(key).style.color = "#1b262c"
     }
@@ -145,7 +144,7 @@ def on_click(x, y, button, pressed):
         return
     
     if pressed:
-      window.evaluate_js(trigger_js(td_id))
+      window.evaluate_js("window.set_label('" + td_id + "', true)")
       set_cps_js(td_id, update_cps(td_id == "right"))
     else:    
       window.evaluate_js("window.clear_label('" + td_id + "')")
